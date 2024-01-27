@@ -79,7 +79,7 @@ function getRandomNum(min = 1, max = 20) {
   return randomNum;
 }
 
-function setBag(rand) {
+function setBag(random) {
   let timeOfDay = getTimeOfDay();
 
   switch (timeOfDay) {
@@ -96,10 +96,15 @@ function setBag(rand) {
       timeOfDay = 'evening'
   }
 
-  let bgNum = rand;
+  let bgNum = random;
   bgNum = bgNum.toString().padStart(2, '0');
 
-  document.body.style.backgroundImage = `url('https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeOfDay}/${bgNum}.jpg')`;
+  const url = `https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeOfDay}/${bgNum}.jpg`;
+  const img = new Image();
+  img.src = url;
+  img.onload = () => {
+    document.body.style.backgroundImage = `url(${url})`;
+  }
 }
 
 setBag(randomNumber);
