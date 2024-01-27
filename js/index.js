@@ -3,10 +3,13 @@
 const time = document.querySelector('.time'),
   date = document.querySelector('.date'),
   greeting = document.querySelector('.greeting'),
-  yourName = document.querySelector('.name');
+  yourName = document.querySelector('.name'),
+  slideNext = document.querySelector('.slide-next'),
+  slidePrev = document.querySelector('.slide-prev');
 
 let randomNum = 0,
-  prevRandomNum = 0;
+  prevRandomNum = 0,
+  randomNumber = getRandomNum();
 
 // 1. Часы и календарь
 function showTime() {
@@ -76,7 +79,7 @@ function getRandomNum(min = 1, max = 20) {
   return randomNum;
 }
 
-function setBag() {
+function setBag(rand) {
   let timeOfDay = getTimeOfDay();
 
   switch (timeOfDay) {
@@ -93,10 +96,32 @@ function setBag() {
       timeOfDay = 'evening'
   }
 
-  let bgNum = getRandomNum();
+  let bgNum = rand;
   bgNum = bgNum.toString().padStart(2, '0');
 
   document.body.style.backgroundImage = `url('https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeOfDay}/${bgNum}.jpg')`;
 }
 
-setBag();
+setBag(randomNumber);
+
+// Перелистывание изображений по нажатию на стрелки
+function getSlideNext() {
+  ++randomNumber;
+  if (randomNumber > 20) {
+    randomNumber = 1;
+  }
+  setBag(randomNumber);
+  console.log(`следующий слайд ${randomNumber}`);
+}
+
+function getSlidePrev() {
+  randomNumber -= 1;
+  if (randomNumber < 1) {
+    randomNumber = 20;
+  }
+  setBag(randomNumber);
+  console.log(`предыдущий слайд ${randomNumber}`);
+}
+
+slideNext.addEventListener('click', getSlideNext);
+slidePrev.addEventListener('click', getSlidePrev);
