@@ -5,6 +5,9 @@ const time = document.querySelector('.time'),
   greeting = document.querySelector('.greeting'),
   yourName = document.querySelector('.name');
 
+let randomNum = 0,
+  prevRandomNum = 0;
+
 // 1. Часы и календарь
 function showTime() {
   const currentTime = new Date().toLocaleTimeString('ru-RU');
@@ -62,3 +65,38 @@ function getLocalStorage() {
 }
 
 window.addEventListener('load', getLocalStorage);
+
+// 3. Слайдер изображений
+function getRandomNum(min = 1, max = 20) {
+  randomNum = Math.floor(Math.random() * (max - min + 1) + min);
+  while (randomNum == prevRandomNum) {
+    randomNum = Math.floor(Math.random() * (max - min + 1) + min);
+  }
+  prevRandomNum = randomNum;
+  return randomNum;
+}
+
+function setBag() {
+  let timeOfDay = getTimeOfDay();
+
+  switch (timeOfDay) {
+    case 'ночь':
+      timeOfDay = 'night';
+      break;
+    case 'утро':
+      timeOfDay = 'morning';
+      break;
+    case 'день':
+      timeOfDay = 'afternoon';
+      break;
+    default:
+      timeOfDay = 'evening'
+  }
+
+  let bgNum = getRandomNum();
+  bgNum = bgNum.toString().padStart(2, '0');
+
+  document.body.style.backgroundImage = `url('https://raw.githubusercontent.com/rolling-scopes-school/stage1-tasks/assets/images/${timeOfDay}/${bgNum}.jpg')`;
+}
+
+setBag();
