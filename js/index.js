@@ -12,7 +12,10 @@ const time = document.querySelector('.time'),
   humidity = document.querySelector('.humidity'),
   temperature = document.querySelector('.temperature'),
   city = document.querySelector('.city'),
-  weatherErr = document.querySelector('.weather-error');
+  weatherErr = document.querySelector('.weather-error'),
+  quote = document.querySelector('.quote'),
+  author = document.querySelector('.author'),
+  changeQuote = document.querySelector('.change-quote');
 
 let randomNum = 0,
   prevRandomNum = 0,
@@ -189,3 +192,29 @@ function getLS() {
 }
 
 window.addEventListener('load', getLS);
+
+// 5. Виджет "цитата дня"
+async function getQuotes() {
+  const quotes = '../assets/data/db.json';
+  const res = await fetch(quotes);
+  const data = await res.json();
+
+  return data;
+}
+
+// Функция показа цитаты на странице
+function showQuote() {
+  let random = getRandomNum(0, 2);
+
+  getQuotes()
+    .then(data => [data[random].text, data[random].author])
+    .then(data => {
+      quote.textContent = data[0];
+      author.textContent = data[1];
+    });
+}
+
+showQuote();
+
+// Слушатель события по кнопке которая при нажатии на неё покажет случайную цитату
+changeQuote.addEventListener('click', showQuote);
