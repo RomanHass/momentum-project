@@ -1,4 +1,6 @@
 'use strict';
+import playList from './playList.js';
+
 // Глобальные переменные
 const time = document.querySelector('.time'),
   date = document.querySelector('.date'),
@@ -15,11 +17,17 @@ const time = document.querySelector('.time'),
   weatherErr = document.querySelector('.weather-error'),
   quote = document.querySelector('.quote'),
   author = document.querySelector('.author'),
-  changeQuote = document.querySelector('.change-quote');
+  changeQuote = document.querySelector('.change-quote'),
+  play = document.querySelector('.play'),
+  playPrev = document.querySelector('.play-prev'),
+  playNext = document.querySelector('.play-next'),
+  trackList = document.querySelector('.play-list');
 
 let randomNum = 0,
   prevRandomNum = 0,
-  randomNumber = getRandomNum();
+  randomNumber = getRandomNum(),
+  isFlag = false,
+  playNum = 0;
 
 // 1. Часы и календарь
 function showTime() {
@@ -218,3 +226,62 @@ showQuote();
 
 // Слушатель события по кнопке которая при нажатии на неё покажет случайную цитату
 changeQuote.addEventListener('click', showQuote);
+
+// 6. Аудиоплеер
+// Объединение проигрывания и остановки звука в одной функции.
+let audio = new Audio();
+
+function playAudio() {
+  audio.src = playList[playNum].src;
+  if (!isFlag) {
+    audio.play();
+    toggleBtn();
+    isFlag = true;
+  } else {
+    audio.pause();
+    toggleBtn();
+    isFlag = false;
+  }
+}
+
+// Переключение play/pause
+function toggleBtn() {
+  if (!isFlag) {
+    play.classList.add('pause');
+  } else {
+    play.classList.remove('pause');
+  }
+}
+
+// Функции воспроизведения следующего/предыдущего аудио
+function playNextAudio() {
+  ++playNum;
+  if (playNum > playList.length - 1) {
+    playNum = 0;
+  }
+  isFlag = false;
+  playAudio()
+}
+
+function playPrevAudio() {
+  --playNum;
+  if (playNum < 0) {
+    playNum = playList.length - 1;
+  }
+  isFlag = false;
+  playAudio()
+}
+
+play.addEventListener('click', playAudio);
+playNext.addEventListener('click', playNextAudio);
+playPrev.addEventListener('click', playPrevAudio);
+
+
+// Плейлист на странице создаётся средствами JavaScript
+playList.forEach((el, i) => {
+  const li = document.createElement('li');
+  li.classList.add('play-item');
+  li.textContent = playList[i].title;
+  trackList.append(li);
+});
+
